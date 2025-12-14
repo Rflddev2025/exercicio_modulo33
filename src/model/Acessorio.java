@@ -1,15 +1,23 @@
 package model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Acessorio {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String nome;
 
-    public Acessorio(int id, String nome) {
-        this.id = id;
+    public Acessorio() {}
+
+    public Acessorio(String nome) {
         this.nome = nome;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

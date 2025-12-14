@@ -1,15 +1,24 @@
 package model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Marca {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String nome;
 
-    public Marca(int id, String nome) {
-        this.id = id;
+    public Marca() {}
+
+    public Marca(String nome) {
         this.nome = nome;
     }
 
-    public int getId() {
+
+    public Long getId() {
         return id;
     }
 

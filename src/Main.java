@@ -1,50 +1,35 @@
-import java.sql.Connection;
-import java.sql.Statement;
+import jakarta.persistence.EntityManager;
+import java.util.List;
+
+import model.Marca;
+import model.Carro;
+import model.Acessorio;
+import util.JPAUtil;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        try (Connection conn = Database.connect();
-             Statement stmt = conn.createStatement()) {
+        EntityManager em = JPAUtil.getEntityManager();
 
-            stmt.execute("""
-                CREATE TABLE IF NOT EXISTS marca (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL
-                );
-            """);
+        em.getTransaction().begin();
 
-            stmt.execute("""
-                CREATE TABLE IF NOT EXISTS carro (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    modelo TEXT NOT NULL,
-                    marca_id INTEGER,
-                    FOREIGN KEY (marca_id) REFERENCES marca(id)
-                );
-            """);
+        Marca marca = new Marca("Toyota");
 
-            stmt.execute("""
-                CREATE TABLE IF NOT EXISTS acessorio (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL
-                );
-            """);
+        Acessorio ar = new Acessorio("Ar Condicionado");
+        Acessorio abs = new Acessorio("ABS");
 
-            stmt.execute("""
-                CREATE TABLE IF NOT EXISTS carro_acessorio (
-                    carro_id INTEGER,
-                    acessorio_id INTEGER,
-                    PRIMARY KEY (carro_id, acessorio_id),
-                    FOREIGN KEY (carro_id) REFERENCES carro(id),
-                    FOREIGN KEY (acessorio_id) REFERENCES acessorio(id)
-                );
-            """);
+        Carro carro = new Carro("Corolla", marca);
+        carro.setAcessorios(List.of(ar, abs));
 
-            System.out.println("Banco e tabelas criados com sucesso!");
+        em.persist(marca);
+        em.persist(ar);
+        em.persist(abs);
+        em.persist(carro);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        em.getTransaction().commit();
+        em.close();
+
+        System.out.println("Entidades JPA persistidas com sucesso!");
     }
 }

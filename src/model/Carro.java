@@ -1,17 +1,33 @@
 package model;
 
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
 public class Carro {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String modelo;
+
+    @ManyToOne
+    @JoinColumn(name = "marca_id")
     private Marca marca;
 
-    public Carro(int id, String modelo, Marca marca) {
-        this.id = id;
+    @ManyToMany
+    private List<Acessorio> acessorios;
+
+    public Carro() {}
+
+    public Carro(String modelo, Marca marca) {
         this.modelo = modelo;
         this.marca = marca;
     }
 
-    public int getId() {
+    // ✅ GETTERS
+    public Long getId() {
         return id;
     }
 
@@ -21,5 +37,13 @@ public class Carro {
 
     public Marca getMarca() {
         return marca;
+    }
+
+    public List<Acessorio> getAcessorios() {
+        return acessorios;
+    }
+
+    public void setAcessorios(List<Acessorio> acessorios) {
+        this.acessorios = acessorios;
     }
 }
